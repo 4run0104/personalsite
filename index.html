@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Bible verse</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4a7a8c;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1.5em;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .hidden-message-form {
+            display: none;
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4a7a8c;
+            color: white;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #3b6d78;
+        }
+        .show-form-button {
+            background-color: #bbb;
+            color: #fff;
+            margin-top: 20px;
+        }
+        .status-message {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Daily God's Message</h1>
+        <div class="message">
+            <p>Loading message...</p>
+        </div>
+        <button class="show-form-button" onclick="toggleForm()">Show Secret Message Form</button>
+        <div class="hidden-message-form">
+            <p>Write your secret message below:</p>
+            <form>
+                <textarea id="message" placeholder="Write your message here..."></textarea>
+                <button type="button" onclick="sendMessage()">Send</button>
+            </form>
+            <p id="status" class="status-message"></p>
+        </div>
+    </div>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("ewMEs7y3AJsTwdAWG"); // Replace with your EmailJS user ID
+        })();
+
+        function fetchMessage() {
+            fetch('https://labs.bible.org/api/?passage=random&type=json')
+                .then(response => response.json())
+                .then(data => {
+                    const message = data[0];
+                    document.querySelector('.message').innerHTML = `<p>"${message.text}" - ${message.bookname} ${message.chapter}:${message.verse}</p>`;
+                })
+                .catch(error => console.error('Error fetching message:', error));
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('message').value;
+
+            var templateParams = {
+                message: message,
+                to_email: 'arunofficial0104@gmail.com' // Replace with your email
+            };
+
+            emailjs.send('service_9qcq13q', 'template_hod1noq', templateParams)
+                .then(function(response) {
+                    document.getElementById('status').innerText = "Message sent successfully!";
+                }, function(error) {
+                    document.getElementById('status').innerText = "Failed to send message. Please try again.";
+                });
+        }
+
+        function toggleForm() {
+            var form = document.querySelector('.hidden-message-form');
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchMessage);
+    </script>
+</body>
+</html>
